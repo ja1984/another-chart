@@ -53,7 +53,7 @@ export function drawScale(
   const sortedValues: number[] = Array.from(scaleValues).sort((a, b) => b - a);
 
   ctx.font = '12px sans-serif';
-  ctx.fillStyle = '#333';
+  ctx.fillStyle = '#666666';
   ctx.textAlign = 'right';
   ctx.textBaseline = 'middle';
 
@@ -63,7 +63,7 @@ export function drawScale(
     return padding.top + ((end - val) / (end - start)) * drawableHeight;
   };
 
-  ctx.strokeStyle = '#f5f5f5';
+  ctx.strokeStyle = '#e5e5e5';
   ctx.lineWidth = 1;
 
   sortedValues.forEach(val => {
@@ -85,9 +85,17 @@ export function drawScale(
 
   const lineX = padding.left + 0.5;
 
+
+  // Draw vertical line at the left edge of the chart
   ctx.beginPath();
   ctx.moveTo(lineX, padding.top);
   ctx.lineTo(lineX, height - padding.bottom);
+  ctx.stroke();
+
+  // Draw horizontal line at the top of the chart
+  ctx.beginPath();
+  ctx.moveTo(width - padding.right, padding.top);
+  ctx.lineTo(width - padding.right, height - padding.bottom);
   ctx.stroke();
 }
 
@@ -105,7 +113,7 @@ export function drawBottomScale(
 
   const numLabels = labels.length;
   const numTicks = numLabels - 1;
-  ctx.fillStyle = '#333';
+  ctx.fillStyle = '#666';
   ctx.font = '12px sans-serif';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'top';
@@ -122,7 +130,7 @@ export function drawBottomScale(
       // draw vertical grid line at tick positions (between labels)
       if (i < numTicks) {
         const tickX = padding.left + segmentWidth * (i + 1);
-        ctx.strokeStyle = '#f5f5f5';
+        ctx.strokeStyle = '#e5e5e5';
         ctx.beginPath();
         ctx.moveTo(tickX, padding.top);
         ctx.lineTo(tickX, height - labelAreaHeight - 20);
@@ -136,7 +144,7 @@ export function drawBottomScale(
     for (let i = 0; i <= numTicks; i++) {
       const x = padding.left + (usableWidth / numTicks) * i;
 
-      ctx.strokeStyle = '#f5f5f5';
+      ctx.strokeStyle = '#e5e5e5';
       ctx.beginPath();
       ctx.moveTo(x, padding.top);
       ctx.lineTo(x, height - labelAreaHeight - 20);
@@ -146,10 +154,6 @@ export function drawBottomScale(
     }
   }
 }
-
-
-
-
 
 
 export function getChartPadding(extraPadding?: Partial<Record<'top' | 'right' | 'bottom' | 'left', number>>) {

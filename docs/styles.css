@@ -130,7 +130,7 @@ body {
     backdrop-filter: blur(20px);
     border: 1px solid rgba(71, 85, 105, 0.5);
     border-radius: 1rem;
-    padding: 2rem;
+    padding: 1rem;
 }
 
 /* Section Headers */
@@ -304,7 +304,8 @@ body {
 /* Footer */
 .footer {
     padding: 4rem 0 2rem;
-    border-top: 1px solid rgba(71, 85, 105, 0.5);
+    padding-top: 0;
+ 
 }
 
 .footer-content {

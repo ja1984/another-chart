@@ -30,7 +30,6 @@ const STYLES = `
     flex-wrap: wrap;
     justify-content: center;
     gap: 10px;
-    background: rgba(255, 255, 255, 0.8);
     font-size: 12px;
     font-family: sans-serif;
   }
@@ -48,7 +47,7 @@ const STYLES = `
   
   .another-chart__tooltip { 
       position: absolute;
-      background: #333;
+      background: #666;
       color: #fff;
       padding: 4px 8px;
       border-radius: 4px;

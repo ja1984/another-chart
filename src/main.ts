@@ -22,8 +22,8 @@ function render() {
 // }
 app.innerHTML = `
   <another-chart labels="January, February, March, April, May, June, July" legend="top" begin-at-zero="true">
-    <ac-data-set data="[100, 40, 10, 15, 10, 25, 30]" color="#900">
-      <ac-bar-chart color="rgba(0,0,255, .1)"></ac-bar-chart>
+    <ac-data-set data="[100, 40, 10, 15, 10, 25, 30]">
+      <ac-bar-chart></ac-bar-chart>
       <ac-line-chart></ac-line-chart>
     </ac-data-set>
     <ac-tooltip position="mouse"></ac-tooltip>
