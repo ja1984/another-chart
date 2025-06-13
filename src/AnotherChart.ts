@@ -181,8 +181,6 @@ class AnotherChart extends HTMLElement {
 
 
   renderAllCharts() {
-    // this.renderLegends(); // ← Add this line
-
     const dataSets = Array.from(this.querySelectorAll('ac-data-set')) as any[];
     this.#center = Array.from(this.querySelectorAll('ac-bar-chart')).length > 0
 
