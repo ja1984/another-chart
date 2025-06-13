@@ -2,8 +2,6 @@ import DataSet from './DataSet';
 import Tooltip from './Tooltip';
 import BarChart from './charts/BarChart';
 import LineChart from './charts/LineChart';
-import PieChart from './charts/PieChart';
-import AreaChart from './charts/AreaChart';
 
 import { drawScale, drawBottomScale } from './utils/chart';
 import { colorToRgba } from "./utils/colors";
@@ -239,6 +237,3 @@ customElements.define('ac-line-chart', LineChart);
 customElements.define('ac-tooltip', Tooltip);
 
 customElements.define('ac-bar-chart', BarChart);
-
-customElements.define('pie-chart', PieChart);
-customElements.define('area-chart', AreaChart);

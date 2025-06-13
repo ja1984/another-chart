@@ -5,7 +5,7 @@ A lightweight, flexible, and modern web component charting library. Create beaut
 ## Features
 
 - **Web Components**: Use charts as native HTML elements.
-- **Multiple Chart Types**: Line, Bar, Area, and Pie charts.
+- **Multiple Chart Types**: Line and Bar.
 - **Customizable**: Easily style and configure datasets, colors, legends, and tooltips.
 - **Responsive**: Charts resize automatically.
 - **Zero Dependency**: No external libraries required.
@@ -50,8 +50,6 @@ Or, if using the demo:
 
 - `<ac-line-chart>`: Line chart (supports `color`, `width`, `tension`)
 - `<ac-bar-chart>`: Bar chart (supports `color`, `bar-width`)
-- `<area-chart>`: Area chart
-- `<pie-chart>`: Pie chart
 
 ## Customization
 
