@@ -69,11 +69,9 @@ class AnotherChart extends HTMLElement {
   #beginAtZero: boolean = false;
   #center: boolean = false;
   #clickMap: Array<{ x: number; y: number; width: number; height: number; value: number }> = [];
+  #canvas!: HTMLCanvasElement;
 
-
-  canvas!: HTMLCanvasElement;
-  ctx!: CanvasRenderingContext2D | null;
-  _slot!: HTMLSlotElement;
+  #ctx!: CanvasRenderingContext2D | null;
   _observer!: MutationObserver;
   _resizeObserver!: ResizeObserver;
 
@@ -94,10 +92,11 @@ class AnotherChart extends HTMLElement {
   setupElements() {
     const style = document.createElement('style');
     style.textContent = STYLES;
-    this.canvas = document.createElement('canvas');
-    this.ctx = this.canvas.getContext('2d');
-    this._slot = document.createElement('slot');
-    this.shadowRoot?.append(style, this.canvas, this._slot);
+
+    this.#canvas = document.createElement('canvas');
+    this.#ctx = this.#canvas.getContext('2d');
+    const slot = document.createElement('slot');
+    this.shadowRoot?.append(style, this.#canvas, slot);
   }
 
   setupObservers() {
@@ -118,7 +117,7 @@ class AnotherChart extends HTMLElement {
       this.#clickMap.push(detail);
     });
 
-    this.canvas.addEventListener('click', this.handleClick.bind(this));
+    this.#canvas.addEventListener('click', this.handleClick.bind(this));
   }
 
   connectedCallback() {
@@ -132,7 +131,7 @@ class AnotherChart extends HTMLElement {
 
   attributeChangedCallback(name: string, oldValue: string | null, newValue: string | null) {
     console.log(`Attribute changed: ${name} from ${oldValue} to ${newValue}`);
-    if (!this.canvas || !this.ctx) return;
+    if (!this.#canvas || !this.#ctx) return;
 
     if (oldValue === newValue) return;
 
@@ -157,7 +156,7 @@ class AnotherChart extends HTMLElement {
   }
 
   handleClick(event: MouseEvent) {
-    const rect = this.canvas.getBoundingClientRect();
+    const rect = this.#canvas.getBoundingClientRect();
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
 
@@ -198,11 +197,11 @@ class AnotherChart extends HTMLElement {
   }
 
   drawScales() {
-    const clientWidth = this.shadowRoot?.querySelector('canvas')!.clientWidth ?? 800;
-    const clientHeight = this.shadowRoot?.querySelector('canvas')!.clientHeight ?? 400;
+    const clientWidth = this.#canvas!.clientWidth ?? 800;
+    const clientHeight = this.#canvas!.clientHeight ?? 400;
 
-    drawScale(this.canvas, this.ctx!, clientWidth, clientHeight, this.getGlobals().min, this.getGlobals().max, this.#beginAtZero);
-    drawBottomScale(this.ctx!, clientWidth, clientHeight, this.#labels, this.#center);
+    drawScale(this.#canvas, this.#ctx!, clientWidth, clientHeight, this.getGlobals().min, this.getGlobals().max, this.#beginAtZero);
+    drawBottomScale(this.#ctx!, clientWidth, clientHeight, this.#labels, this.#center);
   }
 
   beginAtZero() {
