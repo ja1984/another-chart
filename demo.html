@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Demo</title>
+  <script src="dist/another-chart.js" type="module"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    #app {
+      position: fixed;
+      inset: 0;
+
+    }
+
+    .grid {
+      height: 100%;
+      width: 100%;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      /* Two equal-width columns */
+      gap: 10px;
+    }
+  </style>
+</head>
+<html>
+<div id="app">
+  <div class="grid">
+    <another-chart labels="January, February, March, April, May, June, July">
+      <data-set data="[165, 59, 80, 81, 56, 55, 40]" label="Sample Data 1" color="#00ff00">
+        <line-chart color="#F44336" width="1"></line-chart>
+      </data-set>
+      <data-set data="[1, 5, 10, 15, 20, 25, 30]">
+        <line-chart color="#090" width="1"></line-chart>
+      </data-set>
+    </another-chart>
+    <another-chart labels="January, February, March, April, May, June, July">
+      <data-set data="[165, 59, 80, 81, 56, 55, 40]" label="Sample Data 1" color="#00ff00">
+        <line-chart color="#F44336" width="1"></line-chart>
+      </data-set>
+      <data-set data="[1, 5, 10, 15, 20, 25, 30]" color="#F44336">
+        <line-chart width="3"></line-chart>
+        <line-chart width="1"></line-chart>
+
+      </data-set>
+
+    </another-chart>
+    <another-chart labels="January, February, March, April, May, June, July">
+      <data-set data="[165, 59, 80, 81, 56, 55, 40]" label="Sample Data 1" color="#00ff00">
+        <line-chart color="#F44336" width="1"></line-chart>
+      </data-set>
+      <data-set data="[1, 5, 10, 15, 20, 25, 30]">
+        <line-chart color="#090" width="1"></line-chart>
+      </data-set>
+    </another-chart>
+
+    <another-chart labels="January, February, March, April, May, June, July">
+      <data-set data="[165, 59, 80, 81, 56, 55, 40]" label="Sample Data 1" color="#00ff00">
+        <line-chart color="#F44336" width="1"></line-chart>
+      </data-set>
+      <data-set data="[1, 5, 10, 15, 20, 25, 30]">
+        <line-chart color="#090" width="1"></line-chart>
+      </data-set>
+    </another-chart>
+
+  </div>
+
+</div>
+
+</html>
