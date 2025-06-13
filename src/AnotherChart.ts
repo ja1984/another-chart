@@ -3,31 +3,9 @@ import Tooltip from './Tooltip';
 import Legend from './Legend';
 import BarChart from './charts/BarChart';
 import LineChart from './charts/LineChart';
-
 import { drawScale, drawBottomScale } from './utils/chart';
 
-
-customElements.define('another-chart', class AnotherChart extends HTMLElement {
-  #labels: string[] = [];
-  #beginAtZero: boolean = false;
-  #center: boolean = false;
-  #clickMap: Array<{ x: number; y: number; width: number; height: number; value: number }> = [];
-
-
-  canvas!: HTMLCanvasElement;
-  ctx!: CanvasRenderingContext2D | null;
-  _slot!: HTMLSlotElement;
-  _observer!: MutationObserver;
-  _resizeObserver!: ResizeObserver;
-
-
-
-  static get observedAttributes() {
-    return ['labels'];
-  }
-
-  connectedCallback() {
-    const content = `
+const STYLES = `
     :host {
       width: 100%;
       height: 100%;
@@ -85,22 +63,44 @@ customElements.define('another-chart', class AnotherChart extends HTMLElement {
     }
   `;
 
-    this.#labels = (this.getAttribute("labels") ?? '').split(',').map(label => label.trim());
-    this.#beginAtZero = (this.getAttribute('begin-at-zero') ?? this.getAttribute('beginAtZero') ?? 'true') === 'true';
 
+class AnotherChart extends HTMLElement {
+  #labels: string[] = [];
+  #beginAtZero: boolean = false;
+  #center: boolean = false;
+  #clickMap: Array<{ x: number; y: number; width: number; height: number; value: number }> = [];
+
+
+  canvas!: HTMLCanvasElement;
+  ctx!: CanvasRenderingContext2D | null;
+  _slot!: HTMLSlotElement;
+  _observer!: MutationObserver;
+  _resizeObserver!: ResizeObserver;
+
+
+
+  static get observedAttributes() {
+    return ['labels'];
+  }
+
+  constructor() {
+    super();
+    this.attachShadow({ mode: "open" });
+    this.setupElements();
+    this.setupObservers();
+    this.setupListeners();
+  }
+
+  setupElements() {
     const style = document.createElement('style');
-    style.textContent = content;
-
+    style.textContent = STYLES;
     this.canvas = document.createElement('canvas');
-
     this.ctx = this.canvas.getContext('2d');
     this._slot = document.createElement('slot');
-    const shadowRoot = this.attachShadow({ mode: "open" });
+    this.shadowRoot?.append(style, this.canvas, this._slot);
+  }
 
-    shadowRoot.appendChild(style);
-    shadowRoot.appendChild(this.canvas);
-    shadowRoot.appendChild(this._slot);
-
+  setupObservers() {
     this._observer = new MutationObserver(() => this.renderAllCharts());
     this._observer.observe(this, {
       childList: true,
@@ -108,26 +108,30 @@ customElements.define('another-chart', class AnotherChart extends HTMLElement {
       attributes: true,
     });
 
-    // 👇 Use ResizeObserver instead of window resize
     this._resizeObserver = new ResizeObserver(() => this.renderAllCharts());
-    this._resizeObserver.observe(this); // or this.canvas if you prefer to track canvas size only
+    this._resizeObserver.observe(this);
+  }
 
+  setupListeners() {
     this.addEventListener('register-click-area', (e: Event) => {
       const detail = (e as CustomEvent).detail;
       this.#clickMap.push(detail);
     });
 
     this.canvas.addEventListener('click', this.handleClick.bind(this));
+  }
 
+  connectedCallback() {
+    this.#labels = (this.getAttribute("labels") ?? '').split(',').map(label => label.trim());
+    this.#beginAtZero = (this.getAttribute('begin-at-zero') ?? this.getAttribute('beginAtZero') ?? 'true') === 'true';
 
-
-    // Defer first render
     setTimeout(() => this.renderAllCharts(), 0);
   }
 
 
 
   attributeChangedCallback(name: string, oldValue: string | null, newValue: string | null) {
+    console.log(`Attribute changed: ${name} from ${oldValue} to ${newValue}`);
     if (!this.canvas || !this.ctx) return;
 
     if (oldValue === newValue) return;
@@ -227,8 +231,9 @@ customElements.define('another-chart', class AnotherChart extends HTMLElement {
     values = [...new Set(values)].toSorted((a, b) => a - b);
     return { min: values.at(0) ?? 0, max: values.at(-1) ?? 0 }
   }
-});
+};
 
+customElements.define('another-chart', AnotherChart);
 customElements.define('ac-data-set', DataSet);
 customElements.define('ac-line-chart', LineChart);
 customElements.define('ac-tooltip', Tooltip);
