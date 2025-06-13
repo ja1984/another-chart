@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Another Chart - Easy to install charts</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://raw.githubusercontent.com/ja1984/another-chart/dist/another-chart.js"></script>
+
+</head>
+
+<body>
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-text">
+          <span class="badge">Open Source</span>
+          <h1>Another Chart</h1>
+          <p>Create stunning, interactive charts with our modern web component library. Lightning-fast
+            performance meets elegant design.</p>
+          <div class="hero-buttons">
+            <button class="btn btn-primary">Get Started</button>
+            <a href="https://github.com/ja1984/another-chart" target="_blank" class="btn btn-secondary">View
+              on GitHub</a>
+          </div>
+        </div>
+        <div class="hero-chart">
+          <another-chart labels="January, February, March, April, May, June, July" legend="top" begin-at-zero="true" style="width: 400px; height: 300px;">
+            <ac-data-set data="[100, 40, 10, 15, 10, 25, 30]" color="#900">
+              <ac-bar-chart color="rgba(0,0,255, .1)"></ac-bar-chart>
+              <ac-line-chart></ac-line-chart>
+            </ac-data-set>
+            <ac-tooltip position="mouse"></ac-tooltip>
+            <ac-legend position="top"></ac-legend>
+          </another-chart>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Demo Section -->
+  <section class="demo">
+    <div class="container">
+      <div class="section-header">
+        <span class="badge">Interactive Demo</span>
+        <h2>See It In Action</h2>
+        <p>Experience the power and flexibility of our chart library with these live examples.</p>
+      </div>
+      <div class="demo-grid">
+        <div class="demo-card">
+          <h3>Line Chart</h3>
+          <canvas id="lineChart" width="300" height="200"></canvas>
+        </div>
+        <div class="demo-card">
+          <h3>Bar Chart</h3>
+          <canvas id="barChart" width="300" height="200"></canvas>
+        </div>
+        <div class="demo-card">
+          <h3>Doughnut Chart</h3>
+          <canvas id="doughnutChart" width="300" height="200"></canvas>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features">
+    <div class="container">
+      <div class="section-header">
+        <span class="badge">Features</span>
+        <h2>Why Choose Our Library?</h2>
+        <p>Built for modern web development with performance and developer experience in mind.</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">⚡</div>
+          <h3>Lightning Fast</h3>
+          <p>Optimized rendering engine delivers 60fps animations and handles thousands of data points
+            effortlessly.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🎨</div>
+          <h3>Beautiful Design</h3>
+          <p>Stunning default themes with full customization support. Make your charts match your brand
+            perfectly.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📱</div>
+          <h3>Responsive</h3>
+          <p>Works seamlessly across all devices and screen sizes. Touch-friendly interactions included.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🔧</div>
+          <h3>Easy Integration</h3>
+          <p>Drop-in web components work with any framework. React, Vue, Angular, or vanilla JavaScript.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">♿</div>
+          <h3>Accessible</h3>
+          <p>Built with accessibility in mind. Screen reader support and keyboard navigation included.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📊</div>
+          <h3>Rich Chart Types</h3>
+          <p>15+ chart types including line, bar, pie, scatter, heatmap, and more. All highly customizable.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Getting Started Section -->
+  <section class="getting-started">
+    <div class="container">
+      <div class="section-header">
+        <span class="badge">Quick Start</span>
+        <h2>Get Started in Minutes</h2>
+        <p>Install, import, and start creating beautiful charts with just a few lines of code.</p>
+      </div>
+      <div class="getting-started-grid">
+        <div class="code-card">
+          <h3>📦 Installation</h3>
+          <div class="code-block">
+            <p>Install via npm:</p>
+            <div class="code">
+              <code>npm install your-chart-library</code>
+              <button class="copy-btn" onclick="copyToClipboard('npm install your-chart-library')">📋</button>
+            </div>
+          </div>
+          <div class="code-block">
+            <p>Or via CDN:</p>
+            <div class="code">
+              <code>&lt;script src="https://cdn.example.com/charts.js"&gt;&lt;/script&gt;</code>
+              <button class="copy-btn"
+                onclick="copyToClipboard('<script src=\\'https://cdn.example.com/charts.js\\'></script>')">📋</button>
+            </div>
+          </div>
+        </div>
+        <div class="code-card">
+          <h3>💻 Basic Usage</h3>
+          <div class="code-block">
+            <p>Create your first chart:</p>
+            <div class="code">
+              <pre><code>import { BarChart } from 'your-chart-library';
+
+const data = [
+  { name: 'Jan', value: 400 },
+  { name: 'Feb', value: 300 },
+  { name: 'Mar', value: 600 }
+];
+
+&lt;BarChart 
+  data={data}
+  x-key="name"
+  y-key="value"
+  color="#3b82f6"
+/&gt;</code></pre>
+              <button class="copy-btn"
+                onclick="copyToClipboard(`import { BarChart } from 'your-chart-library';\n\nconst data = [\n  { name: 'Jan', value: 400 },\n  { name: 'Feb', value: 300 },\n  { name: 'Mar', value: 600 }\n];\n\n<BarChart \n  data={data}\n  x-key=\"
+                name\"\n y-key=\"value\"\n color=\"#3b82f6\"\n />`)">📋</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn-primary">📖 View Documentation</button>
+        <button class="btn btn-secondary">🔗 Browse Examples</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-brand">
+          <h3>ChartGlow</h3>
+          <p>Making data visualization beautiful and accessible for everyone.</p>
+        </div>
+        <div class="footer-links">
+          <div class="link-group">
+            <h4>Product</h4>
+            <a href="#">Documentation</a>
+            <a href="#">Examples</a>
+            <a href="#">Playground</a>
+            <a href="#">Changelog</a>
+          </div>
+          <div class="link-group">
+            <h4>Community</h4>
+            <a href="#">GitHub</a>
+            <a href="#">Discord</a>
+            <a href="#">Twitter</a>
+            <a href="#">Stack Overflow</a>
+          </div>
+          <div class="link-group">
+            <h4>Support</h4>
+            <a href="#">Help Center</a>
+            <a href="#">Contact</a>
+            <a href="#">Bug Reports</a>
+            <a href="#">Feature Requests</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2024 ChartGlow. Open source and built with ❤️</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+
+    // Copy to clipboard function
+    function copyToClipboard(text) {
+      navigator.clipboard.writeText(text).then(function () {
+        // Show toast or feedback
+        alert('Copied to clipboard!');
+      });
+    }
+  </script>
+</body>
+
+</html>

@@ -6,7 +6,8 @@ export default defineConfig({
       entry: 'src/AnotherChart.ts',
       name: 'AnotherChart',
       fileName: 'another-chart',
-      formats: ['es'],
-    }
+      formats: ['es', 'umd'],
+    },
+    minify: true,
   }
 });
