@@ -1,24 +1,25 @@
 import DataSet from './DataSet';
 import Tooltip from './Tooltip';
+import Legend from './Legend';
 import BarChart from './charts/BarChart';
 import LineChart from './charts/LineChart';
 
 import { drawScale, drawBottomScale } from './utils/chart';
-import { colorToRgba } from "./utils/colors";
 
 
 customElements.define('another-chart', class AnotherChart extends HTMLElement {
   #labels: string[] = [];
   #beginAtZero: boolean = false;
-  #legend: 'top' | 'bottom' | 'none' = 'bottom';
+  #center: boolean = false;
+  #clickMap: Array<{ x: number; y: number; width: number; height: number; value: number }> = [];
+
 
   canvas!: HTMLCanvasElement;
   ctx!: CanvasRenderingContext2D | null;
   _slot!: HTMLSlotElement;
   _observer!: MutationObserver;
-  _legendContainer!: HTMLDivElement;
   _resizeObserver!: ResizeObserver;
-  
+
 
 
   static get observedAttributes() {
@@ -36,7 +37,7 @@ customElements.define('another-chart', class AnotherChart extends HTMLElement {
       flex-direction: column;
     }
 
-    :host:has(.legend--top) {
+    :host:has(.another-chart__legend--top) {
       flex-direction: column-reverse;
     }
     canvas {
@@ -44,7 +45,7 @@ customElements.define('another-chart', class AnotherChart extends HTMLElement {
       flex: 1;
       min-height: 0px;
     }
-    .legend {
+    .another-chart__legend {
     width: 100%;
     padding: 6px;
     display: flex;
@@ -85,7 +86,6 @@ customElements.define('another-chart', class AnotherChart extends HTMLElement {
   `;
 
     this.#labels = (this.getAttribute("labels") ?? '').split(',').map(label => label.trim());
-    this.#legend = this.getAttribute("legend") as 'top' | 'bottom' | 'none' || 'bottom';
     this.#beginAtZero = (this.getAttribute('begin-at-zero') ?? this.getAttribute('beginAtZero') ?? 'true') === 'true';
 
     const style = document.createElement('style');
@@ -101,17 +101,6 @@ customElements.define('another-chart', class AnotherChart extends HTMLElement {
     shadowRoot.appendChild(this.canvas);
     shadowRoot.appendChild(this._slot);
 
-    if (this.#legend !== 'none') {
-      this._legendContainer = document.createElement('div');
-      this._legendContainer.className = 'legend';
-
-      if (this.#legend === 'top') {
-        this._legendContainer.classList.add('legend--top');
-      }
-      shadowRoot.appendChild(this._legendContainer);
-    }
-
-
     this._observer = new MutationObserver(() => this.renderAllCharts());
     this._observer.observe(this, {
       childList: true,
@@ -123,12 +112,18 @@ customElements.define('another-chart', class AnotherChart extends HTMLElement {
     this._resizeObserver = new ResizeObserver(() => this.renderAllCharts());
     this._resizeObserver.observe(this); // or this.canvas if you prefer to track canvas size only
 
+    this.addEventListener('register-click-area', (e: Event) => {
+      const detail = (e as CustomEvent).detail;
+      this.#clickMap.push(detail);
+    });
+
+    this.canvas.addEventListener('click', this.handleClick.bind(this));
+
+
 
     // Defer first render
     setTimeout(() => this.renderAllCharts(), 0);
   }
-
-  
 
 
 
@@ -155,13 +150,38 @@ customElements.define('another-chart', class AnotherChart extends HTMLElement {
   disconnectedCallback() {
     if (this._observer) this._observer.disconnect();
     if (this._resizeObserver) this._resizeObserver.disconnect();
-
   }
 
+  handleClick(event: MouseEvent) {
+    const rect = this.canvas.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+
+    const hit = this.#clickMap.find(region =>
+      x >= region.x &&
+      x <= region.x + region.width &&
+      y >= region.y &&
+      y <= region.y + region.height
+    );
+
+    if (hit) {
+      console.log('Clicked value:', hit.value);
+
+      // Optional: Emit custom event for external listeners
+      this.dispatchEvent(new CustomEvent('value-click', {
+        detail: { value: hit.value },
+        bubbles: true,
+        composed: true
+      }));
+    }
+  }
+
+
   renderAllCharts() {
-    this.renderLegends(); // ← Add this line
+    // this.renderLegends(); // ← Add this line
 
     const dataSets = Array.from(this.querySelectorAll('ac-data-set')) as any[];
+    this.#center = Array.from(this.querySelectorAll('ac-bar-chart')).length > 0
 
     // Update data in all datasets first
     dataSets.forEach(ds => ds.updateData?.());
@@ -178,35 +198,8 @@ customElements.define('another-chart', class AnotherChart extends HTMLElement {
     const clientHeight = this.shadowRoot?.querySelector('canvas')!.clientHeight ?? 400;
 
     drawScale(this.canvas, this.ctx!, clientWidth, clientHeight, this.getGlobals().min, this.getGlobals().max, this.#beginAtZero);
-    drawBottomScale(this.ctx!, clientWidth, clientHeight, this.#labels);
+    drawBottomScale(this.ctx!, clientWidth, clientHeight, this.#labels, this.#center);
   }
-
-  renderLegends() {
-    const datasets = Array.from(this.querySelectorAll('ac-data-set')) as HTMLElement[];
-
-    if (!this._legendContainer) return;
-    this._legendContainer.innerHTML = '';
-
-    datasets.forEach((ds, i) => {
-      const label = ds.getAttribute('label') || `Dataset ${i + 1}`;
-      const color = colorToRgba(ds.getAttribute('color'));
-
-      const item = document.createElement('div');
-      item.className = 'legend__item';
-
-      const swatch = document.createElement('div');
-      swatch.className = 'legend__color';
-      swatch.style.backgroundColor = color;
-
-      const text = document.createElement('span');
-      text.textContent = label ?? `Dataset ${i + 1}`;
-
-      item.appendChild(swatch);
-      item.appendChild(text);
-      this._legendContainer.appendChild(item);
-    });
-  }
-
 
   beginAtZero() {
     return this.#beginAtZero;
@@ -218,6 +211,10 @@ customElements.define('another-chart', class AnotherChart extends HTMLElement {
 
   getLabels() {
     return this.#labels;
+  }
+
+  getCenter() {
+    return this.#center;
   }
 
   getGlobals(): { min: number, max: number } {
@@ -235,5 +232,6 @@ customElements.define('another-chart', class AnotherChart extends HTMLElement {
 customElements.define('ac-data-set', DataSet);
 customElements.define('ac-line-chart', LineChart);
 customElements.define('ac-tooltip', Tooltip);
+customElements.define('ac-legend', Legend);
 
 customElements.define('ac-bar-chart', BarChart);

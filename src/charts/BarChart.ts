@@ -52,8 +52,9 @@ export default class BarChart extends HTMLElement {
 
     const barSpacing = drawableWidth / totalPoints;
     const space = this.#width !== 'auto' ? 0 : this.#space ?? 0;
-    
-    const barWidth = this.#width === 'auto' ? barSpacing - (space) : Math.min(parseFloat(this.#width), barSpacing - (space));
+    const barWidth = this.#width === 'auto'
+      ? barSpacing - space
+      : Math.min(parseFloat(this.#width), barSpacing - space);
 
     ctx.fillStyle = colorToRgba(this.#color ?? color ?? 'black');
 
@@ -61,6 +62,19 @@ export default class BarChart extends HTMLElement {
       const x = i * barSpacing + (barSpacing - barWidth) / 2;
       const y = ((val - globalMin) / range) * drawableHeight;
       ctx.fillRect(x, 0, barWidth, y);
+
+      // Dispatch click area (note: reverse the scale Y again)
+      this.dispatchEvent(new CustomEvent('register-click-area', {
+        detail: {
+          x: x + padding.left,
+          y: height - padding.bottom - y,
+          width: barWidth,
+          height: y,
+          value: val,
+        },
+        bubbles: true,
+        composed: true
+      }));
     });
 
     ctx.restore();

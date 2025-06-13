@@ -96,34 +96,57 @@ export function drawBottomScale(
   ctx: CanvasRenderingContext2D,
   width: number,
   height: number,
-  labels: string[]
+  labels: string[],
+  centerLabels: boolean = true
 ) {
   const padding = getChartPadding();
-  const usableWidth = width - padding.left - padding.right; // subtract left scale space
-
+  const usableWidth = width - padding.left - padding.right;
   const labelAreaHeight = 10;
 
-
-  const numTicks = labels.length - 1;
+  const numLabels = labels.length;
+  const numTicks = numLabels - 1;
   ctx.fillStyle = '#333';
   ctx.font = '12px sans-serif';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'top';
   ctx.lineWidth = 1;
 
-  for (let i = 0; i <= numTicks; i++) {
-    const x = padding.left + (usableWidth / numTicks) * i;
+  if (centerLabels) {
+    // Calculate segment width between labels (like bar width + spacing)
+    const segmentWidth = usableWidth / numLabels;
 
-    const label = labels[i];
-    
-    ctx.strokeStyle = '#f5f5f5';
-    ctx.beginPath();
-    ctx.moveTo(x, padding.top);
-    ctx.lineTo(x, height - labelAreaHeight - 20);
-    ctx.stroke();
-    ctx.fillText(label, x, height - labelAreaHeight - 10);
+    for (let i = 0; i < numLabels; i++) {
+      // x is center of each segment
+      const x = padding.left + segmentWidth * (i + 0.5);
+
+      // draw vertical grid line at tick positions (between labels)
+      if (i < numTicks) {
+        const tickX = padding.left + segmentWidth * (i + 1);
+        ctx.strokeStyle = '#f5f5f5';
+        ctx.beginPath();
+        ctx.moveTo(tickX, padding.top);
+        ctx.lineTo(tickX, height - labelAreaHeight - 20);
+        ctx.stroke();
+      }
+
+      ctx.fillText(labels[i], x, height - labelAreaHeight - 10);
+    }
+  } else {
+    // Original behavior: labels aligned directly with ticks
+    for (let i = 0; i <= numTicks; i++) {
+      const x = padding.left + (usableWidth / numTicks) * i;
+
+      ctx.strokeStyle = '#f5f5f5';
+      ctx.beginPath();
+      ctx.moveTo(x, padding.top);
+      ctx.lineTo(x, height - labelAreaHeight - 20);
+      ctx.stroke();
+
+      ctx.fillText(labels[i], x, height - labelAreaHeight - 10);
+    }
   }
 }
+
 
 
 

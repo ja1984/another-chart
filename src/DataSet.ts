@@ -2,6 +2,7 @@ interface AnotherChart {
   getGlobals(): { min: number; max: number };
   getNumberOfValues(): number;
   beginAtZero(): boolean;
+  getCenter(): boolean;
   canvas: HTMLCanvasElement;
   ctx: CanvasRenderingContext2D | null;
 }
@@ -57,6 +58,7 @@ export default class DataSet extends HTMLElement {
     const global = this.parent.getGlobals();
     const numberOfValues = this.parent.getNumberOfValues();
     const rawMin = this.parent.beginAtZero() ? 0 : global.min;
+    const shouldCenterPoints = this.parent.getCenter();
     const rawMax = global.max;
 
     const approxSteps = 10;
@@ -78,7 +80,7 @@ export default class DataSet extends HTMLElement {
 
     Array.from(this.children).forEach(child => {
       if (typeof (child as any).draw === 'function') {
-        (child as any).draw(ctx, width, height, this.data.slice(0, numberOfValues), start, end, numberOfValues, this.color);
+        (child as any).draw(ctx, width, height, this.data.slice(0, numberOfValues), start, end, numberOfValues, this.color, shouldCenterPoints);
       }
     });
   }
