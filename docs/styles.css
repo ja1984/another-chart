@@ -86,7 +86,7 @@ body {
     font-size: 3.5rem;
     font-weight: 700;
     margin-bottom: 1.5rem;
-    background: linear-gradient(135deg, #ffffff, #94a3b8);
+    background: linear-gradient(135deg, #aaa, #94a3b8);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -418,4 +418,90 @@ body {
     .features-grid {
         grid-template-columns: 1fr;
     }
+}
+
+
+/* --- Light Theme Overrides --- */
+
+body {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #f8fafc 100%);
+    color: #1e293b;
+}
+
+.badge {
+    background: rgba(16, 185, 129, 0.08);
+    border: 1px solid rgba(16, 185, 129, 0.18);
+    color: #059669;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    color: white;
+}
+
+.btn-secondary {
+    background: transparent;
+    border: 1px solid #cbd5e1;
+    color: #1e293b;
+}
+
+.btn-secondary:hover {
+    background: #e2e8f0;
+    color: #1e293b;
+}
+
+.hero-chart,
+.demo-card,
+.feature-card,
+.code-card {
+    background: rgba(255,255,255,0.8);
+    backdrop-filter: blur(8px);
+    border: 1px solid #cbd5e1;
+}
+
+.section-header h2,
+.demo-card h3,
+.feature-card h3,
+.code-card h3,
+.footer-brand h3,
+.link-group h4 {
+    color: #1e293b;
+}
+
+.section-header p,
+.feature-card p,
+.hero-text p,
+.footer-brand p,
+.link-group a,
+.stat-label {
+    color: #64748b;
+}
+
+.code {
+    background: #f1f5f9;
+    border: 1px solid #cbd5e1;
+    color: #334155;
+}
+
+.code code {
+    color: #334155;
+}
+
+.copy-btn {
+    background: #e2e8f0;
+    color: #64748b;
+}
+
+.copy-btn:hover {
+    background: #cbd5e1;
+    color: #1e293b;
+}
+
+.footer {
+    background: #f8fafc;
+}
+
+.footer-bottom {
+    border-top: 1px solid #cbd5e1;
+    color: #94a3b8;
 }

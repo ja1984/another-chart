@@ -22,14 +22,14 @@
           <p>Create stunning, interactive charts with our modern web component library. Lightning-fast
             performance meets elegant design.</p>
           <div class="hero-buttons">
-            <button class="btn btn-primary">Get Started</button>
+            <!-- <button class="btn btn-primary">Get Started</button> -->
             <a href="https://github.com/ja1984/another-chart" target="_blank" class="btn btn-secondary">View
               on GitHub</a>
           </div>
         </div>
         <div class="hero-chart">
           <another-chart labels="January, February, March, April, May, June, July" legend="top" begin-at-zero="true">
-            <ac-data-set data="[100, 40, 10, 15, 10, 25, 30]" color="#fff">
+            <ac-data-set data="[100, 40, 10, 15, 10, 25, 30]">
               <ac-line-chart></ac-line-chart>
             </ac-data-set>
             <ac-tooltip position="mouse"></ac-tooltip>
@@ -126,8 +126,7 @@
             <p>via CDN:</p>
             <div class="code">
               <code>&lt;script src="https://cdn.jsdelivr.net/gh/ja1984/another-chart/dist/another-chart.js" type="module"&gt;&lt;/script&gt;</code>
-              <button class="copy-btn"
-                onclick="copyToClipboard('<script src=\\'https://cdn.jsdelivr.net/gh/ja1984/another-chart/dist/another-chart.js\\' type='module'></script>')">📋</button>
+              <button class="copy-btn" onclick="copyScriptCode();">📋</button>
             </div>
           </div>
         </div>
@@ -146,9 +145,7 @@
   &lt;ac-legend position="top"&gt;&lt;/ac-legend&gt;
 &lt;/another-chart&gt;
               </code></pre>
-              <button class="copy-btn"
-                onclick="copyToClipboard(`import { BarChart } from 'your-chart-library';\n\nconst data = [\n  { name: 'Jan', value: 400 },\n  { name: 'Feb', value: 300 },\n  { name: 'Mar', value: 600 }\n];\n\n<BarChart \n  data={data}\n  x-key=\"
-                name\"\n y-key=\"value\"\n color=\"#3b82f6\"\n />`)">📋</button>
+              <button class="copy-btn" onclick="copyChart();">📋</button>
             </div>
           </div>
         </div>
@@ -162,7 +159,7 @@
 
   <!-- Footer -->
   <footer class="footer">
-    <div class="container">
+    <div class="">
       <div class="footer-bottom">
         <p>Open source and built with ❤️</p>
       </div>
@@ -170,7 +167,21 @@
   </footer>
 
   <script>
+    function copyChart() {
+      const chartCode = `<another-chart labels="January, February, March, April, May, June, July" legend="top" begin-at-zero="true">
+            <ac-data-set data="[100, 40, 10, 15, 10, 25, 30]">
+              <ac-line-chart></ac-line-chart>
+            </ac-data-set>
+            <ac-tooltip position="mouse"></ac-tooltip>
+            <ac-legend position="top"></ac-legend>
+          </another-chart>`
+          copyToClipboard(chartCode);
+    }
 
+    function copyScriptCode() {
+      const scriptCode = '<script src="https://cdn.jsdelivr.net/gh/ja1984/another-chart/dist/another-chart.js" type="module"><\/script>';
+      copyToClipboard(scriptCode);
+    }
     // Copy to clipboard function
     function copyToClipboard(text) {
       navigator.clipboard.writeText(text).then(function () {
