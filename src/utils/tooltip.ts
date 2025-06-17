@@ -1,4 +1,4 @@
-import { colorToRgba } from "../utils/colors";
+import { colorToRgba, defaultColor } from "../utils/colors";
 
 export function draw(event: MouseEvent, canvas: HTMLCanvasElement, element: HTMLDivElement, context, position: 'mouse' | 'point') {
   if (!canvas || !element) {
@@ -29,7 +29,7 @@ export function draw(event: MouseEvent, canvas: HTMLCanvasElement, element: HTML
     return;
   }
 
-  const items: string[] = [];
+  const items: string[] = [`<div>${labels[closestIndex]}</div>`];
   let tooltipX = 0;
   let tooltipY = 0;
   let foundPoint = false;
@@ -40,8 +40,8 @@ export function draw(event: MouseEvent, canvas: HTMLCanvasElement, element: HTML
     if (value == null) return;
 
     const label = ds.getAttribute('label') || `Dataset ${i + 1}`;
-    const color = colorToRgba(ds.getAttribute('color'));
-    items.push(`<div><div>${labels[closestIndex]}</div><span style="color:${color};">●</span> ${label}: ${value}</div>`);
+    const color = colorToRgba(ds.getAttribute('color')) ?? defaultColor(i);
+    items.push(`<div><span style="color:${color};">●</span> ${label}: ${value}</div>`);
 
     // Only use the first valid point for tooltip position
     if (!foundPoint) {

@@ -47,8 +47,7 @@ export default class BarChart extends HTMLElement {
     const range = globalMax - globalMin || 1;
 
     ctx.save();
-    ctx.translate(padding.left + 0.5, height - padding.bottom + 0.5);
-    ctx.scale(1, -1);
+    ctx.translate(padding.left + 0.5, padding.top + 0.5); // No Y-axis flip
 
     const barSpacing = drawableWidth / totalPoints;
     const space = this.#width !== 'auto' ? 0 : this.#space ?? 0;
@@ -58,18 +57,25 @@ export default class BarChart extends HTMLElement {
 
     ctx.fillStyle = colorToRgba(this.#color ?? color ?? 'black');
 
+    const zeroY = ((0 - globalMin) / range) * drawableHeight;
+
     data.forEach((val, i) => {
       const x = i * barSpacing + (barSpacing - barWidth) / 2;
-      const y = ((val - globalMin) / range) * drawableHeight;
-      ctx.fillRect(x, 0, barWidth, y);
+      const barHeight = ((Math.abs(val)) / range) * drawableHeight;
 
-      // Dispatch click area (note: reverse the scale Y again)
+      const y = val >= 0
+        ? drawableHeight - ((val - globalMin) / range) * drawableHeight
+        : drawableHeight - zeroY;
+
+      ctx.fillRect(x, y, barWidth, barHeight);
+
+      // Dispatch click area (coordinates adjusted for non-flipped canvas)
       this.dispatchEvent(new CustomEvent('register-click-area', {
         detail: {
           x: x + padding.left,
-          y: height - padding.bottom - y,
+          y: y + padding.top,
           width: barWidth,
-          height: y,
+          height: barHeight,
           value: val,
         },
         bubbles: true,
@@ -79,4 +85,5 @@ export default class BarChart extends HTMLElement {
 
     ctx.restore();
   }
+
 }

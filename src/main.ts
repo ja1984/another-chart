@@ -26,6 +26,10 @@ app.innerHTML = `
       <ac-bar-chart></ac-bar-chart>
       <ac-line-chart></ac-line-chart>
     </ac-data-set>
+    <ac-data-set data="[10, 4, 0, 15, 10, 25, 30]">
+      <ac-bar-chart></ac-bar-chart>
+      <ac-line-chart></ac-line-chart>
+    </ac-data-set>
     <ac-tooltip position="mouse"></ac-tooltip>
     <ac-legend position="top"></ac-legend>
   </another-chart>

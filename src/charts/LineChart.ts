@@ -51,8 +51,7 @@ export default class LineChart extends HTMLElement {
     const drawableHeight = height - (padding.top + padding.bottom);
 
     ctx.save();
-    ctx.translate(padding.left + 0.5, height - padding.bottom + 0.5);
-    ctx.scale(1, -1);
+    ctx.translate(padding.left + 0.5, padding.top + 0.5); // No Y flip
 
     ctx.lineWidth = this.#width;
 
@@ -63,14 +62,14 @@ export default class LineChart extends HTMLElement {
       const segmentWidth = drawableWidth / totalPoints;
       points = data.map((val, i) => {
         const x = segmentWidth * (i + 0.5);
-        const y = ((val - globalMin) / range) * drawableHeight;
-        return { x, y };
+        const y = drawableHeight - ((val - globalMin) / range) * drawableHeight;
+        return { x, y: Math.max(0, Math.min(drawableHeight, y)) };
       });
     } else {
       points = data.map((val, i) => {
         const x = (i / (totalPoints - 1)) * drawableWidth;
-        const y = ((val - globalMin) / range) * drawableHeight;
-        return { x, y };
+        const y = drawableHeight - ((val - globalMin) / range) * drawableHeight;
+        return { x, y: Math.max(0, Math.min(drawableHeight, y)) };
       });
     }
 
@@ -106,6 +105,7 @@ export default class LineChart extends HTMLElement {
 
     ctx.restore();
   }
+
 }
 
 

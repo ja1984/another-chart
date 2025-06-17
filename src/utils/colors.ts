@@ -1,5 +1,5 @@
 export function colorToRgba(input?: string | null) {
-  if(!input) return 'rgba(0, 0, 0, 1)'; // Default to black if input is empty
+  if(!input) return undefined; // Default to black if input is empty
   input = input.trim();
 
   // HEX format
@@ -28,4 +28,20 @@ export function colorToRgba(input?: string | null) {
   }
 
   throw new Error("Unsupported color format");
+}
+
+export function defaultColor(index: number): string {
+  const palette = [
+    'rgba(34, 197, 94, 0.9)',    // Green
+    'rgba(239, 68, 68, 0.9)',    // Red
+    'rgba(59, 130, 246, 0.9)',   // Blue
+    'rgba(251, 146, 60, 0.9)',   // Orange
+    'rgba(236, 72, 153, 0.9)',   // Pink
+    'rgba(132, 204, 22, 0.9)',   // Lime
+    'rgba(14, 165, 233, 0.9)',   // Sky Blue
+    'rgba(168, 85, 247, 0.9)',   // Purple
+    'rgba(250, 204, 21, 0.9)',   // Yellow
+    'rgba(20, 184, 166, 0.9)',   // Teal
+  ];
+  return palette[index % palette.length];
 }

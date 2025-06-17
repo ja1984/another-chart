@@ -1,5 +1,5 @@
 
-import { colorToRgba } from "./utils/colors";
+import { colorToRgba, defaultColor } from "./utils/colors";
 
 export default class Legend extends HTMLElement {
   #root!: ShadowRoot | null | undefined;
@@ -43,7 +43,7 @@ export default class Legend extends HTMLElement {
 
     datasets.forEach((ds, i) => {
       const label = ds.getAttribute('label') || `Dataset ${i + 1}`;
-      const color = colorToRgba(ds.getAttribute('color'));
+      const color = colorToRgba(ds.getAttribute('color')) ?? defaultColor(i);
 
       const item = document.createElement('div');
       item.className = 'legend__item';

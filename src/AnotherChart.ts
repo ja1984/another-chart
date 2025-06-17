@@ -4,6 +4,7 @@ import Legend from './Legend';
 import BarChart from './charts/BarChart';
 import LineChart from './charts/LineChart';
 import { drawScale, drawBottomScale } from './utils/chart';
+import { defaultColor } from './utils/colors';
 
 const STYLES = `
     :host {
@@ -184,13 +185,13 @@ class AnotherChart extends HTMLElement {
     this.#center = Array.from(this.querySelectorAll('ac-bar-chart')).length > 0
 
     // Update data in all datasets first
-    dataSets.forEach(ds => ds.updateData?.());
+    dataSets.forEach((ds, index) => ds.updateData?.(defaultColor(index)));
 
     // Now draw the updated scales
     this.drawScales();
 
     // Force a resize (which triggers a render)
-    dataSets.forEach(ds => ds.forceResize?.());
+    dataSets.forEach((ds, index) => ds.forceResize?.());
   }
 
   drawScales() {
@@ -224,9 +225,12 @@ class AnotherChart extends HTMLElement {
       values.push(...data.slice(0, this.#labels?.length || data.length));
     });
 
-    values = [...new Set(values)].toSorted((a, b) => a - b);
-    return { min: values.at(0) ?? 0, max: values.at(-1) ?? 0 }
+    const min = values.length ? Math.min(...values) : 0;
+    const max = values.length ? Math.max(...values) : 0;
+
+    return { min, max };
   }
+
 };
 
 customElements.define('another-chart', AnotherChart);

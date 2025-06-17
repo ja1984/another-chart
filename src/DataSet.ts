@@ -16,7 +16,7 @@ export default class DataSet extends HTMLElement {
 
     this.parent = this.parentNode as unknown as AnotherChart;
     this.attachShadow({ mode: 'open' }).innerHTML = `<slot></slot>`;
-    this.updateData();
+    // this.updateData();
   }
 
   static get observedAttributes() {
@@ -37,9 +37,9 @@ export default class DataSet extends HTMLElement {
     this.render(); // Trigger re-render on updates
   }
 
-  updateData() {
+  updateData(color: string) {
     this.data = JSON.parse(this.getAttribute('data') || '[]');
-    this.color = this.getAttribute('color') || 'rgba(46, 204, 113, 0.9)';
+    this.color = this.getAttribute('color') || color;
   }
 
   forceResize() {
@@ -48,7 +48,7 @@ export default class DataSet extends HTMLElement {
 
   private render() {
     //this.parentElement?.shadowRoot.querySelector('canvas')
-    if(!this.parent) return;
+    if (!this.parent) return;
     const canvas = this.parentElement?.shadowRoot?.querySelector('canvas') as HTMLCanvasElement;
     const ctx = canvas.getContext('2d');
 
@@ -57,9 +57,17 @@ export default class DataSet extends HTMLElement {
     const height = canvas.height / dpr;
     const global = this.parent.getGlobals();
     const numberOfValues = this.parent.getNumberOfValues();
-    const rawMin = this.parent.beginAtZero() ? 0 : global.min;
+    let rawMin = global.min;
+    let rawMax = global.max;
+
+    if (this.parent.beginAtZero()) {
+      rawMin = Math.min(0, global.min);
+      rawMax = Math.max(0, global.max);
+    }
+
+    // const rawMin = this.parent.beginAtZero() ? 0 : global.min;
     const shouldCenterPoints = this.parent.getCenter();
-    const rawMax = global.max;
+    // const rawMax = global.max;
 
     const approxSteps = 10;
     const range = rawMax - rawMin || 1;
