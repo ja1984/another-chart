@@ -1,10 +1,16 @@
 import { colorToRgba, defaultColor } from "../utils/colors";
 
-export function draw(event: MouseEvent, canvas: HTMLCanvasElement, element: HTMLDivElement, context, position: 'mouse' | 'point') {
+export function draw(
+  event: MouseEvent,
+  canvas: HTMLCanvasElement,
+  element: HTMLDivElement,
+  context,
+  position: 'mouse' | 'point'
+) {
   if (!canvas || !element) {
     console.warn('[AC Tooltip] Canvas or tooltip element not found.');
     return;
-  };
+  }
 
   const rect = canvas.getBoundingClientRect();
   const x = event.clientX - rect.left;
@@ -22,12 +28,15 @@ export function draw(event: MouseEvent, canvas: HTMLCanvasElement, element: HTML
   const drawableHeight = height - padding.top - padding.bottom;
 
   const mouseX = (x - padding.left) / drawableWidth;
-  const closestIndex = Math.round(mouseX * (numberOfValues - 1));
 
-  if (closestIndex < 0 || closestIndex >= numberOfValues) {
+  // Optional: early exit if mouse is outside bounds
+  if (mouseX < 0 || mouseX > 1) {
     element.style.display = 'none';
     return;
   }
+
+  const index = Math.floor(mouseX * numberOfValues);
+  const closestIndex = Math.max(0, Math.min(numberOfValues - 1, index));
 
   const items: string[] = [`<div>${labels[closestIndex]}</div>`];
   let tooltipX = 0;
@@ -43,7 +52,6 @@ export function draw(event: MouseEvent, canvas: HTMLCanvasElement, element: HTML
     const color = colorToRgba(ds.getAttribute('color')) ?? defaultColor(i);
     items.push(`<div><span style="color:${color};">●</span> ${label}: ${value}</div>`);
 
-    // Only use the first valid point for tooltip position
     if (!foundPoint) {
       tooltipX = padding.left + (closestIndex / (numberOfValues - 1)) * drawableWidth;
       tooltipY = padding.top + drawableHeight * (1 - (value - min) / (max - min));
@@ -53,22 +61,22 @@ export function draw(event: MouseEvent, canvas: HTMLCanvasElement, element: HTML
 
   if (position === 'mouse') {
     if (items.length) {
-        element.innerHTML = items.join('');
-        element.style.left = `${x + 10}px`;
-        element.style.top = `${y + 10}px`;
-        element.style.display = 'block';
-      } else {
-        element.style.display = 'none';
-      }
-      return;
-    }
-
-    if (items.length && foundPoint) {
       element.innerHTML = items.join('');
-      element.style.left = `${tooltipX + 10}px`; // Position to the right of the point
-      element.style.top = `${tooltipY - 30}px`;  // Above the point
+      element.style.left = `${x + 10}px`;
+      element.style.top = `${y + 10}px`;
       element.style.display = 'block';
     } else {
       element.style.display = 'none';
     }
+    return;
   }
+
+  if (items.length && foundPoint) {
+    element.innerHTML = items.join('');
+    element.style.left = `${tooltipX + 10}px`; // Right of point
+    element.style.top = `${tooltipY - 30}px`;   // Above point
+    element.style.display = 'block';
+  } else {
+    element.style.display = 'none';
+  }
+}
