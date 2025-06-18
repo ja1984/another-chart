@@ -1,11 +1,11 @@
-var ot = Object.defineProperty;
-var V = (i) => {
-  throw TypeError(i);
+var nt = Object.defineProperty;
+var et = (o) => {
+  throw TypeError(o);
 };
-var it = (i, s, t) => s in i ? ot(i, s, { enumerable: !0, configurable: !0, writable: !0, value: t }) : i[s] = t;
-var $ = (i, s, t) => it(i, typeof s != "symbol" ? s + "" : s, t), tt = (i, s, t) => s.has(i) || V("Cannot " + t);
-var r = (i, s, t) => (tt(i, s, "read from private field"), t ? t.call(i) : s.get(i)), m = (i, s, t) => s.has(i) ? V("Cannot add the same private member more than once") : s instanceof WeakSet ? s.add(i) : s.set(i, t), p = (i, s, t, e) => (tt(i, s, "write to private field"), e ? e.call(i, t) : s.set(i, t), t);
-class nt extends HTMLElement {
+var rt = (o, e, t) => e in o ? nt(o, e, { enumerable: !0, configurable: !0, writable: !0, value: t }) : o[e] = t;
+var $ = (o, e, t) => rt(o, typeof e != "symbol" ? e + "" : e, t), st = (o, e, t) => e.has(o) || et("Cannot " + t);
+var a = (o, e, t) => (st(o, e, "read from private field"), t ? t.call(o) : e.get(o)), y = (o, e, t) => e.has(o) ? et("Cannot add the same private member more than once") : e instanceof WeakSet ? e.add(o) : e.set(o, t), p = (o, e, t, s) => (st(o, e, "write to private field"), s ? s.call(o, t) : e.set(o, t), t);
+class at extends HTMLElement {
   constructor() {
     super(...arguments);
     $(this, "data", []);
@@ -13,108 +13,136 @@ class nt extends HTMLElement {
     $(this, "parent");
   }
   connectedCallback() {
-    this.parent = this.parentNode, this.attachShadow({ mode: "open" }).innerHTML = "<slot></slot>", this.updateData();
+    this.parent = this.parentNode, this.attachShadow({ mode: "open" }).innerHTML = "<slot></slot>";
   }
   static get observedAttributes() {
     return ["data", "color"];
   }
-  attributeChangedCallback(t, e, o) {
-    e !== o && (t === "data" && (this.data = JSON.parse(o || "[]")), t === "color" && (this.color = o || "rgba(46, 204, 113, 0.9)"), this.render());
+  attributeChangedCallback(t, s, i) {
+    s !== i && (t === "data" && (this.data = JSON.parse(i || "[]")), t === "color" && (this.color = i || "rgba(46, 204, 113, 0.9)"), this.render());
   }
-  updateData() {
-    this.data = JSON.parse(this.getAttribute("data") || "[]"), this.color = this.getAttribute("color") || "rgba(46, 204, 113, 0.9)";
+  updateData(t) {
+    this.data = JSON.parse(this.getAttribute("data") || "[]"), this.color = this.getAttribute("color") || t;
   }
   forceResize() {
     this.render();
   }
   render() {
-    var b, T;
+    var g, S;
     if (!this.parent) return;
-    const t = (T = (b = this.parentElement) == null ? void 0 : b.shadowRoot) == null ? void 0 : T.querySelector("canvas"), e = t.getContext("2d"), o = window.devicePixelRatio || 1, a = t.width / o, h = t.height / o, n = this.parent.getGlobals(), w = this.parent.getNumberOfValues(), u = this.parent.beginAtZero() ? 0 : n.min, v = this.parent.getCenter(), c = n.max, S = (c - u || 1) / 10, A = Math.pow(10, Math.floor(Math.log10(S))), l = S / A;
-    let C;
-    l <= 1 ? C = 1 : l <= 2 ? C = 2 : l <= 4 ? C = 5 : C = 10;
-    const d = C * A, g = Math.floor(u / d) * d, f = Math.ceil(c / d) * d;
-    Array.from(this.children).forEach((k) => {
-      typeof k.draw == "function" && k.draw(e, a, h, this.data.slice(0, w), g, f, w, this.color, v);
+    const t = (S = (g = this.parentElement) == null ? void 0 : g.shadowRoot) == null ? void 0 : S.querySelector("canvas"), s = t.getContext("2d"), i = window.devicePixelRatio || 1, r = t.width / i, l = t.height / i, n = this.parent.getGlobals(), w = this.parent.getNumberOfValues();
+    let u = n.min, f = n.max;
+    this.parent.beginAtZero() && (u = Math.min(0, n.min), f = Math.max(0, n.max));
+    const d = this.parent.getCenter(), v = (f - u || 1) / 10, A = Math.pow(10, Math.floor(Math.log10(v))), h = v / A;
+    let E;
+    h <= 1 ? E = 1 : h <= 2 ? E = 2 : h <= 4 ? E = 5 : E = 10;
+    const c = E * A, m = Math.floor(u / c) * c, _ = Math.ceil(f / c) * c;
+    Array.from(this.children).forEach((M) => {
+      typeof M.draw == "function" && M.draw(s, r, l, this.data.slice(0, w), m, _, w, this.color, d);
     });
   }
 }
-function G(i) {
-  if (!i) return "rgba(0, 0, 0, 1)";
-  if (i = i.trim(), i.startsWith("#")) {
-    let t = i.replace(/^#/, "");
+function X(o) {
+  if (!o) return;
+  if (o = o.trim(), o.startsWith("#")) {
+    let t = o.replace(/^#/, "");
     t.length === 3 ? t = t.split("").map((n) => n + n).join("") : t.length === 4 && (t = t.split("").map((n) => n + n).join(""));
-    const e = parseInt(t.substring(0, 2), 16), o = parseInt(t.substring(2, 4), 16), a = parseInt(t.substring(4, 6), 16), h = t.length === 8 ? parseInt(t.substring(6, 8), 16) / 255 : 1;
-    return `rgba(${e}, ${o}, ${a}, ${h})`;
+    const s = parseInt(t.substring(0, 2), 16), i = parseInt(t.substring(2, 4), 16), r = parseInt(t.substring(4, 6), 16), l = t.length === 8 ? parseInt(t.substring(6, 8), 16) / 255 : 1;
+    return `rgba(${s}, ${i}, ${r}, ${l})`;
   }
-  const s = i.match(/rgba?\(([^)]+)\)/);
-  if (s) {
-    let [t, e, o, a = 1] = s[1].split(",").map((h) => h.trim());
-    return `rgba(${parseInt(t)}, ${parseInt(e)}, ${parseInt(o)}, ${parseFloat(a)})`;
+  const e = o.match(/rgba?\(([^)]+)\)/);
+  if (e) {
+    let [t, s, i, r = 1] = e[1].split(",").map((l) => l.trim());
+    return `rgba(${parseInt(t)}, ${parseInt(s)}, ${parseInt(i)}, ${parseFloat(r)})`;
   }
   throw new Error("Unsupported color format");
 }
-function rt(i, s, t, e, o) {
-  if (!s || !t) {
+function V(o) {
+  const e = [
+    "rgba(34, 197, 94, 0.9)",
+    // Green
+    "rgba(239, 68, 68, 0.9)",
+    // Red
+    "rgba(59, 130, 246, 0.9)",
+    // Blue
+    "rgba(251, 146, 60, 0.9)",
+    // Orange
+    "rgba(236, 72, 153, 0.9)",
+    // Pink
+    "rgba(132, 204, 22, 0.9)",
+    // Lime
+    "rgba(14, 165, 233, 0.9)",
+    // Sky Blue
+    "rgba(168, 85, 247, 0.9)",
+    // Purple
+    "rgba(250, 204, 21, 0.9)",
+    // Yellow
+    "rgba(20, 184, 166, 0.9)"
+    // Teal
+  ];
+  return e[o % e.length];
+}
+function lt(o, e, t, s, i) {
+  if (!e || !t) {
     console.warn("[AC Tooltip] Canvas or tooltip element not found.");
     return;
   }
-  const a = s.getBoundingClientRect(), h = i.clientX - a.left, n = i.clientY - a.top, w = Array.from(e.querySelectorAll("ac-data-set")), u = e.getNumberOfValues(), { min: v, max: c } = e.getGlobals(), _ = e.getLabels(), y = { top: 20, bottom: 30, left: 40, right: 20 }, S = s.clientWidth, A = s.clientHeight, l = S - y.left - y.right, C = A - y.top - y.bottom, d = (h - y.left) / l, g = Math.round(d * (u - 1));
-  if (g < 0 || g >= u) {
+  const r = e.getBoundingClientRect(), l = o.clientX - r.left, n = o.clientY - r.top, w = Array.from(s.querySelectorAll("ac-data-set")), u = s.getNumberOfValues(), { min: f, max: d } = s.getGlobals(), C = s.getLabels(), b = { top: 20, bottom: 30, left: 40, right: 20 }, v = e.clientWidth, A = e.clientHeight, h = v - b.left - b.right, E = A - b.top - b.bottom, c = (l - b.left) / h;
+  if (c < 0 || c > 1) {
     t.style.display = "none";
     return;
   }
-  const f = [];
-  let b = 0, T = 0, k = !1;
-  if (w.forEach((E, x) => {
-    const X = JSON.parse(E.getAttribute("data") || "[]")[g];
-    if (X == null) return;
-    const et = E.getAttribute("label") || `Dataset ${x + 1}`, st = G(E.getAttribute("color"));
-    f.push(`<div><div>${_[g]}</div><span style="color:${st};">●</span> ${et}: ${X}</div>`), k || (b = y.left + g / (u - 1) * l, T = y.top + C * (1 - (X - v) / (c - v)), k = !0);
-  }), o === "mouse") {
-    f.length ? (t.innerHTML = f.join(""), t.style.left = `${h + 10}px`, t.style.top = `${n + 10}px`, t.style.display = "block") : t.style.display = "none";
+  const m = Math.floor(c * u), _ = Math.max(0, Math.min(u - 1, m)), g = [`<div>${C[_]}</div>`];
+  let S = 0, M = 0, k = !1;
+  if (w.forEach((x, U) => {
+    const Q = JSON.parse(x.getAttribute("data") || "[]")[_];
+    if (Q == null) return;
+    const ot = x.getAttribute("label") || `Dataset ${U + 1}`, it = X(x.getAttribute("color")) ?? V(U);
+    g.push(`<div><span style="color:${it};">●</span> ${ot}: ${Q}</div>`), k || (S = b.left + _ / (u - 1) * h, M = b.top + E * (1 - (Q - f) / (d - f)), k = !0);
+  }), i === "mouse") {
+    g.length ? (t.innerHTML = g.join(""), t.style.left = `${l + 10}px`, t.style.top = `${n + 10}px`, t.style.display = "block") : t.style.display = "none";
     return;
   }
-  f.length && k ? (t.innerHTML = f.join(""), t.style.left = `${b + 10}px`, t.style.top = `${T - 30}px`, t.style.display = "block") : t.style.display = "none";
+  g.length && k ? (t.innerHTML = g.join(""), t.style.left = `${S + 10}px`, t.style.top = `${M - 30}px`, t.style.display = "block") : t.style.display = "none";
 }
 var H, P, N, Y;
-class at extends HTMLElement {
+class ht extends HTMLElement {
   constructor() {
     super(...arguments);
-    m(this, H, "point");
-    m(this, P);
-    m(this, N);
-    m(this, Y);
+    y(this, H, "point");
+    y(this, P);
+    y(this, N);
+    y(this, Y);
     $(this, "_tooltip");
   }
   static get observedAttributes() {
     return ["position"];
   }
   connectedCallback() {
-    var t, e, o;
-    if (p(this, H, this.getAttribute("position") || "point"), p(this, N, (t = this.parentElement) == null ? void 0 : t.shadowRoot), p(this, Y, this.parentElement), !r(this, N)) {
+    var t, s, i;
+    if (p(this, H, this.getAttribute("position") || "point"), p(this, N, (t = this.parentElement) == null ? void 0 : t.shadowRoot), p(this, Y, this.parentElement), !a(this, N)) {
       console.error("[AC Tooltip] Tooltip must be a child of another-chart with a shadow root.");
       return;
     }
-    p(this, P, (o = (e = this.parentElement) == null ? void 0 : e.shadowRoot) == null ? void 0 : o.querySelector("canvas")), this._tooltip = document.createElement("div"), this._tooltip.className = "another-chart__tooltip", r(this, H) === "point" && this._tooltip.classList.add("another-chart__tooltip--animate"), r(this, N).appendChild(this._tooltip), r(this, P).addEventListener("mousemove", (a) => this.handleMouseMove(a)), r(this, P).addEventListener("mouseleave", () => {
+    p(this, P, (i = (s = this.parentElement) == null ? void 0 : s.shadowRoot) == null ? void 0 : i.querySelector("canvas")), this._tooltip = document.createElement("div"), this._tooltip.className = "another-chart__tooltip", a(this, H) === "point" && this._tooltip.classList.add("another-chart__tooltip--animate"), a(this, N).appendChild(this._tooltip), a(this, P).addEventListener("mousemove", (r) => this.handleMouseMove(r)), a(this, P).addEventListener("mouseleave", () => {
       this._tooltip && (this._tooltip.style.display = "none");
     });
   }
   handleMouseMove(t) {
-    rt(t, r(this, P), this._tooltip, r(this, Y), r(this, H));
+    lt(t, a(this, P), this._tooltip, a(this, Y), a(this, H));
   }
-  attributeChangedCallback(t, e, o) {
-    e !== o && t === "position" && (p(this, H, o || "point"), this._tooltip && this._tooltip.classList.toggle("another-chart__tooltip--animate", r(this, H) === "point"));
+  attributeChangedCallback(t, s, i) {
+    s !== i && t === "position" && (p(this, H, i || "point"), this._tooltip && this._tooltip.classList.toggle("another-chart__tooltip--animate", a(this, H) === "point"));
   }
 }
 H = new WeakMap(), P = new WeakMap(), N = new WeakMap(), Y = new WeakMap();
-var W, I, J;
-class lt extends HTMLElement {
+var W, I, G;
+class ct extends HTMLElement {
   constructor() {
     super(...arguments);
-    m(this, W);
-    m(this, I);
-    m(this, J, "bottom");
+    y(this, W);
+    y(this, I);
+    y(this, G, "bottom");
     $(this, "_legend");
   }
   static get observedAttributes() {
@@ -122,114 +150,116 @@ class lt extends HTMLElement {
   }
   connectedCallback() {
     var t;
-    if (p(this, W, (t = this.parentElement) == null ? void 0 : t.shadowRoot), p(this, I, this.parentElement), p(this, J, this.getAttribute("position") || "bottom"), !r(this, W)) {
+    if (p(this, W, (t = this.parentElement) == null ? void 0 : t.shadowRoot), p(this, I, this.parentElement), p(this, G, this.getAttribute("position") || "bottom"), !a(this, W)) {
       console.warn("[AC Legend] Legend must be a child of another-chart with a shadow root.");
       return;
     }
-    this._legend = document.createElement("div"), this._legend.className = "another-chart__legend", r(this, J) === "top" && this._legend.classList.add("another-chart__legend--top"), r(this, W).appendChild(this._legend), setTimeout(() => {
+    this._legend = document.createElement("div"), this._legend.className = "another-chart__legend", a(this, G) === "top" && this._legend.classList.add("another-chart__legend--top"), a(this, W).appendChild(this._legend), setTimeout(() => {
       this.renderLegends();
     }, 0);
   }
   renderLegends() {
-    if (!r(this, I)) {
+    if (!a(this, I)) {
       console.error("[AC Legend] Legend must be a child of another-chart.");
       return;
     }
-    const t = Array.from(r(this, I).querySelectorAll("ac-data-set"));
-    this._legend && (this._legend.innerHTML = "", t.forEach((e, o) => {
-      const a = e.getAttribute("label") || `Dataset ${o + 1}`, h = G(e.getAttribute("color")), n = document.createElement("div");
+    const t = Array.from(a(this, I).querySelectorAll("ac-data-set"));
+    this._legend && (this._legend.innerHTML = "", t.forEach((s, i) => {
+      const r = s.getAttribute("label") || `Dataset ${i + 1}`, l = X(s.getAttribute("color")) ?? V(i), n = document.createElement("div");
       n.className = "legend__item";
       const w = document.createElement("div");
-      w.className = "legend__color", w.style.backgroundColor = h;
+      w.className = "legend__color", w.style.backgroundColor = l;
       const u = document.createElement("span");
-      u.textContent = a ?? `Dataset ${o + 1}`, n.appendChild(w), n.appendChild(u), this._legend.appendChild(n);
+      u.textContent = r ?? `Dataset ${i + 1}`, n.appendChild(w), n.appendChild(u), this._legend.appendChild(n);
     }));
   }
 }
-W = new WeakMap(), I = new WeakMap(), J = new WeakMap();
-function ht(i, s, t, e, o, a, h = !1) {
-  const n = K(), w = e - (n.top + n.bottom), u = window.devicePixelRatio || 1;
-  i.width = t * u, i.height = e * u, s.setTransform(1, 0, 0, 1, 0, 0), s.scale(u, u), s.clearRect(0, 0, t, e), h && (o > 0 && (o = 0), a < 0 && (a = 0));
-  const v = a - o;
-  if (v === 0) return;
-  let _ = v / 10;
-  const y = Math.pow(10, Math.floor(Math.log10(_))), S = _ / y;
+W = new WeakMap(), I = new WeakMap(), G = new WeakMap();
+function dt(o, e, t, s, i, r, l = !1) {
+  const n = K(), w = s - (n.top + n.bottom), u = window.devicePixelRatio || 1;
+  o.width = t * u, o.height = s * u, e.setTransform(1, 0, 0, 1, 0, 0), e.scale(u, u), e.clearRect(0, 0, t, s), l && (i > 0 && (i = 0), r < 0 && (r = 0));
+  const f = r - i;
+  if (f === 0) return;
+  let C = f / 10;
+  const b = Math.pow(10, Math.floor(Math.log10(C))), v = C / b;
   let A;
-  S <= 1 ? A = 1 : S <= 2 ? A = 2 : S <= 4 ? A = 5 : A = 10;
-  const l = A * y, C = Math.floor(o / l) * l, d = Math.ceil(a / l) * l, g = /* @__PURE__ */ new Set();
-  for (let E = C; E <= d + l / 2; E += l)
-    g.add(Number(E.toFixed(10)));
-  const f = Array.from(g).sort((E, x) => x - E);
-  s.font = "12px sans-serif", s.fillStyle = "#666666", s.textAlign = "right", s.textBaseline = "middle";
-  const b = 5, T = (E) => n.top + (d - E) / (d - C) * w;
-  s.strokeStyle = "#e5e5e5", s.lineWidth = 1, f.forEach((E) => {
-    const x = Math.round(T(E)) + 0.5;
-    s.beginPath(), s.moveTo(n.left + 0.5, x), s.lineTo(t - n.right, x), s.stroke(), s.fillText(
-      E.toFixed(Number.isInteger(l) ? 0 : 1),
-      n.left - b,
+  v <= 1 ? A = 1 : v <= 2 ? A = 2 : v <= 4 ? A = 5 : A = 10;
+  const h = A * b, E = Math.floor(i / h) * h, c = Math.ceil(r / h) * h, m = /* @__PURE__ */ new Set();
+  for (let k = E; k <= c + h / 2; k += h)
+    m.add(Number(k.toFixed(10)));
+  const _ = Array.from(m).sort((k, x) => x - k);
+  e.font = "12px sans-serif", e.fillStyle = "#666666", e.textAlign = "right", e.textBaseline = "middle";
+  const g = 5, S = (k) => n.top + (c - k) / (c - E) * w;
+  e.strokeStyle = "#e5e5e5", e.lineWidth = 1, _.forEach((k) => {
+    const x = Math.round(S(k)) + 0.5;
+    e.beginPath(), e.moveTo(n.left + 0.5, x), e.lineTo(t - n.right, x), e.stroke(), e.fillText(
+      k.toFixed(Number.isInteger(h) ? 0 : 1),
+      n.left - g,
       x
     );
   });
-  const k = n.left + 0.5;
-  s.beginPath(), s.moveTo(k, n.top), s.lineTo(k, e - n.bottom), s.stroke(), s.beginPath(), s.moveTo(t - n.right, n.top), s.lineTo(t - n.right, e - n.bottom), s.stroke();
+  const M = n.left + 0.5;
+  e.beginPath(), e.moveTo(M, n.top), e.lineTo(M, s - n.bottom), e.stroke(), e.beginPath(), e.moveTo(t - n.right, n.top), e.lineTo(t - n.right, s - n.bottom), e.stroke();
 }
-function ct(i, s, t, e, o = !0) {
-  const a = K(), h = s - a.left - a.right, n = 10, w = e.length, u = w - 1;
-  if (i.fillStyle = "#666", i.font = "12px sans-serif", i.textAlign = "center", i.textBaseline = "top", i.lineWidth = 1, o) {
-    const v = h / w;
-    for (let c = 0; c < w; c++) {
-      const _ = a.left + v * (c + 0.5);
-      if (c < u) {
-        const y = a.left + v * (c + 1);
-        i.strokeStyle = "#e5e5e5", i.beginPath(), i.moveTo(y, a.top), i.lineTo(y, t - n - 20), i.stroke();
+function pt(o, e, t, s, i = !0) {
+  const r = K(), l = e - r.left - r.right, n = 10, w = s.length, u = w - 1;
+  if (o.fillStyle = "#666", o.font = "12px sans-serif", o.textAlign = "center", o.textBaseline = "top", o.lineWidth = 1, i) {
+    const f = l / w;
+    for (let d = 0; d < w; d++) {
+      const C = r.left + f * (d + 0.5);
+      if (d < u) {
+        const b = r.left + f * (d + 1);
+        o.strokeStyle = "#e5e5e5", o.beginPath(), o.moveTo(b, r.top), o.lineTo(b, t - n - 20), o.stroke();
       }
-      i.fillText(e[c], _, t - n - 10);
+      o.fillText(s[d], C, t - n - 10);
     }
   } else
-    for (let v = 0; v <= u; v++) {
-      const c = a.left + h / u * v;
-      i.strokeStyle = "#e5e5e5", i.beginPath(), i.moveTo(c, a.top), i.lineTo(c, t - n - 20), i.stroke(), i.fillText(e[v], c, t - n - 10);
+    for (let f = 0; f <= u; f++) {
+      const d = r.left + l / u * f;
+      o.strokeStyle = "#e5e5e5", o.beginPath(), o.moveTo(d, r.top), o.lineTo(d, t - n - 20), o.stroke(), o.fillText(s[f], d, t - n - 10);
     }
 }
-function K(i) {
-  const s = { top: 10, right: 20, bottom: 30, left: 50 };
+function K(o) {
+  const e = { top: 10, right: 20, bottom: 30, left: 50 };
   return {
-    top: s.top + 0,
-    right: s.right + 0,
-    bottom: s.bottom + 0,
-    left: s.left + 0
+    top: e.top + 0,
+    right: e.right + 0,
+    bottom: e.bottom + 0,
+    left: e.left + 0
   };
 }
-var D, O, Z;
-class dt extends HTMLElement {
+var F, O, J;
+class gt extends HTMLElement {
   constructor() {
     super(...arguments);
-    m(this, D);
-    m(this, O, "auto");
-    m(this, Z, 10);
+    y(this, F);
+    y(this, O, "auto");
+    y(this, J, 10);
   }
   connectedCallback() {
-    p(this, O, this.getAttribute("width") ?? "auto"), p(this, D, this.getAttribute("color") || void 0), p(this, Z, parseFloat(this.getAttribute("space") || "10"));
+    p(this, O, this.getAttribute("width") ?? "auto"), p(this, F, this.getAttribute("color") || void 0), p(this, J, parseFloat(this.getAttribute("space") || "10"));
   }
   static get observedAttributes() {
     return ["color", "bar-width"];
   }
-  attributeChangedCallback(t, e, o) {
-    e !== o && (t === "color" && p(this, D, o || void 0), t === "bar-width" && p(this, O, o ?? "auto"));
+  attributeChangedCallback(t, s, i) {
+    s !== i && (t === "color" && p(this, F, i || void 0), t === "bar-width" && p(this, O, i ?? "auto"));
   }
-  draw(t, e, o, a, h, n, w, u) {
-    const v = w ?? a.length, c = K(), _ = e - (c.left + c.right), y = o - (c.top + c.bottom), S = n - h || 1;
-    t.save(), t.translate(c.left + 0.5, o - c.bottom + 0.5), t.scale(1, -1);
-    const A = _ / v, l = r(this, O) !== "auto" ? 0 : r(this, Z) ?? 0, C = r(this, O) === "auto" ? A - l : Math.min(parseFloat(r(this, O)), A - l);
-    t.fillStyle = G(r(this, D) ?? u ?? "black"), a.forEach((d, g) => {
-      const f = g * A + (A - C) / 2, b = (d - h) / S * y;
-      t.fillRect(f, 0, C, b), this.dispatchEvent(new CustomEvent("register-click-area", {
+  draw(t, s, i, r, l, n, w, u) {
+    const f = w ?? r.length, d = K(), C = s - (d.left + d.right), b = i - (d.top + d.bottom), v = n - l || 1;
+    t.save(), t.translate(d.left + 0.5, d.top + 0.5);
+    const A = C / f, h = a(this, O) !== "auto" ? 0 : a(this, J) ?? 0, E = a(this, O) === "auto" ? A - h : Math.min(parseFloat(a(this, O)), A - h);
+    t.fillStyle = X(a(this, F) ?? u ?? "black");
+    const c = (0 - l) / v * b;
+    r.forEach((m, _) => {
+      const g = _ * A + (A - E) / 2, S = Math.abs(m) / v * b, M = m >= 0 ? b - (m - l) / v * b : b - c;
+      t.fillRect(g, M, E, S), this.dispatchEvent(new CustomEvent("register-click-area", {
         detail: {
-          x: f + c.left,
-          y: o - c.bottom - b,
-          width: C,
-          height: b,
-          value: d
+          x: g + d.left,
+          y: M + d.top,
+          width: E,
+          height: S,
+          value: m
         },
         bubbles: !0,
         composed: !0
@@ -237,56 +267,56 @@ class dt extends HTMLElement {
     }), t.restore();
   }
 }
-D = new WeakMap(), O = new WeakMap(), Z = new WeakMap();
-var R, F, j;
-class pt extends HTMLElement {
+F = new WeakMap(), O = new WeakMap(), J = new WeakMap();
+var R, D, j;
+class ut extends HTMLElement {
   constructor() {
     super(...arguments);
-    m(this, R);
-    m(this, F, 0);
-    m(this, j, 2);
+    y(this, R);
+    y(this, D, 0);
+    y(this, j, 2);
   }
   connectedCallback() {
-    p(this, F, parseFloat(this.getAttribute("tension") || "0")), p(this, j, parseFloat(this.getAttribute("width") ?? "") || 1), p(this, R, this.getAttribute("color") || void 0);
+    p(this, D, parseFloat(this.getAttribute("tension") || "0")), p(this, j, parseFloat(this.getAttribute("width") ?? "") || 1), p(this, R, this.getAttribute("color") || void 0);
   }
   static get observedAttributes() {
     return ["tension", "color", "width"];
   }
-  attributeChangedCallback(t, e, o) {
-    e !== o && (t === "color" && p(this, R, o || void 0), t === "tension" && p(this, F, parseFloat(this.getAttribute("tension") || "0")), t === "width" && p(this, j, parseFloat(this.getAttribute("width") ?? "") || 1));
+  attributeChangedCallback(t, s, i) {
+    s !== i && (t === "color" && p(this, R, i || void 0), t === "tension" && p(this, D, parseFloat(this.getAttribute("tension") || "0")), t === "width" && p(this, j, parseFloat(this.getAttribute("width") ?? "") || 1));
   }
-  draw(t, e, o, a, h, n, w, u, v = !0) {
-    const c = w ?? a.length;
-    a.length;
-    const _ = K(), y = e - (_.left + _.right), S = o - (_.top + _.bottom);
-    t.save(), t.translate(_.left + 0.5, o - _.bottom + 0.5), t.scale(1, -1), t.lineWidth = r(this, j);
-    const A = n - h || 1;
-    let l;
-    if (v) {
-      const d = y / c;
-      l = a.map((g, f) => {
-        const b = d * (f + 0.5), T = (g - h) / A * S;
-        return { x: b, y: T };
+  draw(t, s, i, r, l, n, w, u, f = !0) {
+    const d = w ?? r.length;
+    r.length;
+    const C = K(), b = s - (C.left + C.right), v = i - (C.top + C.bottom);
+    t.save(), t.translate(C.left + 0.5, C.top + 0.5), t.lineWidth = a(this, j);
+    const A = n - l || 1;
+    let h;
+    if (f) {
+      const c = b / d;
+      h = r.map((m, _) => {
+        const g = c * (_ + 0.5), S = v - (m - l) / A * v;
+        return { x: g, y: Math.max(0, Math.min(v, S)) };
       });
     } else
-      l = a.map((d, g) => {
-        const f = g / (c - 1) * y, b = (d - h) / A * S;
-        return { x: f, y: b };
+      h = r.map((c, m) => {
+        const _ = m / (d - 1) * b, g = v - (c - l) / A * v;
+        return { x: _, y: Math.max(0, Math.min(v, g)) };
       });
-    t.strokeStyle = G(r(this, R) ?? u ?? "black"), t.beginPath(), t.moveTo(l[0].x, l[0].y);
-    for (let d = 0; d < l.length - 1; d++) {
-      const g = l[d - 1] || l[d], f = l[d], b = l[d + 1], T = l[d + 2] || b, k = r(this, F), E = f.x + (b.x - g.x) * k / 6, x = f.y + (b.y - g.y) * k / 6, Q = b.x - (T.x - f.x) * k / 6, X = b.y - (T.y - f.y) * k / 6;
-      t.bezierCurveTo(E, x, Q, X, b.x, b.y);
+    t.strokeStyle = X(a(this, R) ?? u ?? "black"), t.beginPath(), t.moveTo(h[0].x, h[0].y);
+    for (let c = 0; c < h.length - 1; c++) {
+      const m = h[c - 1] || h[c], _ = h[c], g = h[c + 1], S = h[c + 2] || g, M = a(this, D), k = _.x + (g.x - m.x) * M / 6, x = _.y + (g.y - m.y) * M / 6, U = g.x - (S.x - _.x) * M / 6, tt = g.y - (S.y - _.y) * M / 6;
+      t.bezierCurveTo(k, x, U, tt, g.x, g.y);
     }
-    t.stroke(), t.fillStyle = G(r(this, R) ?? u ?? "black");
-    const C = 4;
-    l.forEach(({ x: d, y: g }) => {
-      t.beginPath(), t.arc(d, g, C, 0, 2 * Math.PI), t.fill();
+    t.stroke(), t.fillStyle = X(a(this, R) ?? u ?? "black");
+    const E = 4;
+    h.forEach(({ x: c, y: m }) => {
+      t.beginPath(), t.arc(c, m, E, 0, 2 * Math.PI), t.fill();
     }), t.restore();
   }
 }
-R = new WeakMap(), F = new WeakMap(), j = new WeakMap();
-const ut = `
+R = new WeakMap(), D = new WeakMap(), j = new WeakMap();
+const bt = `
     :host {
       width: 100%;
       height: 100%;
@@ -342,16 +372,16 @@ const ut = `
       transition: all ease .2s;
     }
   `;
-var M, q, B, U, L, z;
-class bt extends HTMLElement {
+var L, q, B, Z, T, z;
+class ft extends HTMLElement {
   constructor() {
     super();
-    m(this, M, []);
-    m(this, q, !1);
-    m(this, B, !1);
-    m(this, U, []);
-    m(this, L);
-    m(this, z);
+    y(this, L, []);
+    y(this, q, !1);
+    y(this, B, !1);
+    y(this, Z, []);
+    y(this, T);
+    y(this, z);
     $(this, "_observer");
     $(this, "_resizeObserver");
     this.attachShadow({ mode: "open" }), this.setupElements(), this.setupObservers(), this.setupListeners();
@@ -360,11 +390,11 @@ class bt extends HTMLElement {
     return ["labels"];
   }
   setupElements() {
-    var o;
+    var i;
     const t = document.createElement("style");
-    t.textContent = ut, p(this, L, document.createElement("canvas")), p(this, z, r(this, L).getContext("2d"));
-    const e = document.createElement("slot");
-    (o = this.shadowRoot) == null || o.append(t, r(this, L), e);
+    t.textContent = bt, p(this, T, document.createElement("canvas")), p(this, z, a(this, T).getContext("2d"));
+    const s = document.createElement("slot");
+    (i = this.shadowRoot) == null || i.append(t, a(this, T), s);
   }
   setupObservers() {
     this._observer = new MutationObserver(() => this.renderAllCharts()), this._observer.observe(this, {
@@ -375,17 +405,17 @@ class bt extends HTMLElement {
   }
   setupListeners() {
     this.addEventListener("register-click-area", (t) => {
-      const e = t.detail;
-      r(this, U).push(e);
-    }), r(this, L).addEventListener("click", this.handleClick.bind(this));
+      const s = t.detail;
+      a(this, Z).push(s);
+    }), a(this, T).addEventListener("click", this.handleClick.bind(this));
   }
   connectedCallback() {
-    p(this, M, (this.getAttribute("labels") ?? "").split(",").map((t) => t.trim())), p(this, q, (this.getAttribute("begin-at-zero") ?? this.getAttribute("beginAtZero") ?? "true") === "true"), setTimeout(() => this.renderAllCharts(), 0);
+    p(this, L, (this.getAttribute("labels") ?? "").split(",").map((t) => t.trim())), p(this, q, (this.getAttribute("begin-at-zero") ?? this.getAttribute("beginAtZero") ?? "true") === "true"), setTimeout(() => this.renderAllCharts(), 0);
   }
-  attributeChangedCallback(t, e, o) {
-    if (console.log(`Attribute changed: ${t} from ${e} to ${o}`), !(!r(this, L) || !r(this, z)) && e !== o && t === "labels") {
-      const a = (o ?? "").split(",").map((n) => n.trim()), h = a.length === r(this, M).length;
-      if (p(this, M, a), h) {
+  attributeChangedCallback(t, s, i) {
+    if (console.log(`Attribute changed: ${t} from ${s} to ${i}`), !(!a(this, T) || !a(this, z)) && s !== i && t === "labels") {
+      const r = (i ?? "").split(",").map((n) => n.trim()), l = r.length === a(this, L).length;
+      if (p(this, L, r), l) {
         this.drawScales();
         return;
       }
@@ -396,55 +426,57 @@ class bt extends HTMLElement {
     this._observer && this._observer.disconnect(), this._resizeObserver && this._resizeObserver.disconnect();
   }
   handleClick(t) {
-    const e = r(this, L).getBoundingClientRect(), o = t.clientX - e.left, a = t.clientY - e.top, h = r(this, U).find(
-      (n) => o >= n.x && o <= n.x + n.width && a >= n.y && a <= n.y + n.height
+    const s = a(this, T).getBoundingClientRect(), i = t.clientX - s.left, r = t.clientY - s.top, l = a(this, Z).find(
+      (n) => i >= n.x && i <= n.x + n.width && r >= n.y && r <= n.y + n.height
     );
-    h && (console.log("Clicked value:", h.value), this.dispatchEvent(new CustomEvent("value-click", {
-      detail: { value: h.value },
+    l && (console.log("Clicked value:", l.value), this.dispatchEvent(new CustomEvent("value-click", {
+      detail: { value: l.value },
       bubbles: !0,
       composed: !0
     })));
   }
   renderAllCharts() {
     const t = Array.from(this.querySelectorAll("ac-data-set"));
-    p(this, B, Array.from(this.querySelectorAll("ac-bar-chart")).length > 0), t.forEach((e) => {
-      var o;
-      return (o = e.updateData) == null ? void 0 : o.call(e);
-    }), this.drawScales(), t.forEach((e) => {
-      var o;
-      return (o = e.forceResize) == null ? void 0 : o.call(e);
+    p(this, B, Array.from(this.querySelectorAll("ac-bar-chart")).length > 0), t.forEach((s, i) => {
+      var r;
+      return (r = s.updateData) == null ? void 0 : r.call(s, V(i));
+    }), this.drawScales(), t.forEach((s, i) => {
+      var r;
+      return (r = s.forceResize) == null ? void 0 : r.call(s);
     });
   }
   drawScales() {
-    const t = r(this, L).clientWidth ?? 800, e = r(this, L).clientHeight ?? 400;
-    ht(r(this, L), r(this, z), t, e, this.getGlobals().min, this.getGlobals().max, r(this, q)), ct(r(this, z), t, e, r(this, M), r(this, B));
+    const t = a(this, T).clientWidth ?? 800, s = a(this, T).clientHeight ?? 400;
+    dt(a(this, T), a(this, z), t, s, this.getGlobals().min, this.getGlobals().max, a(this, q)), pt(a(this, z), t, s, a(this, L), a(this, B));
   }
   beginAtZero() {
-    return r(this, q);
+    return a(this, q);
   }
   getNumberOfValues() {
     var t;
-    return ((t = r(this, M)) == null ? void 0 : t.length) ?? 0;
+    return ((t = a(this, L)) == null ? void 0 : t.length) ?? 0;
   }
   getLabels() {
-    return r(this, M);
+    return a(this, L);
   }
   getCenter() {
-    return r(this, B);
+    return a(this, B);
   }
   getGlobals() {
     let t = [];
-    return Array.from(this.children).forEach((e) => {
-      var a;
-      const o = JSON.parse(e.getAttribute("data") || "[]");
-      t.push(...o.slice(0, ((a = r(this, M)) == null ? void 0 : a.length) || o.length));
-    }), t = [...new Set(t)].toSorted((e, o) => e - o), { min: t.at(0) ?? 0, max: t.at(-1) ?? 0 };
+    Array.from(this.children).forEach((r) => {
+      var n;
+      const l = JSON.parse(r.getAttribute("data") || "[]");
+      t.push(...l.slice(0, ((n = a(this, L)) == null ? void 0 : n.length) || l.length));
+    });
+    const s = t.length ? Math.min(...t) : 0, i = t.length ? Math.max(...t) : 0;
+    return { min: s, max: i };
   }
 }
-M = new WeakMap(), q = new WeakMap(), B = new WeakMap(), U = new WeakMap(), L = new WeakMap(), z = new WeakMap();
-customElements.define("another-chart", bt);
-customElements.define("ac-data-set", nt);
-customElements.define("ac-line-chart", pt);
-customElements.define("ac-tooltip", at);
-customElements.define("ac-legend", lt);
-customElements.define("ac-bar-chart", dt);
+L = new WeakMap(), q = new WeakMap(), B = new WeakMap(), Z = new WeakMap(), T = new WeakMap(), z = new WeakMap();
+customElements.define("another-chart", ft);
+customElements.define("ac-data-set", at);
+customElements.define("ac-line-chart", ut);
+customElements.define("ac-tooltip", ht);
+customElements.define("ac-legend", ct);
+customElements.define("ac-bar-chart", gt);
