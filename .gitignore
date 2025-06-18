@@ -129,5 +129,8 @@ test/
 
 npm-debug.log
 yarn-error.log
+dist/*
+!dist/.dist-keep
+
 
 # End of https://www.toptal.com/developers/gitignore/api/vue,vuejs,node
